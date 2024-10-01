@@ -1,0 +1,46 @@
+<html>
+
+<head>
+  <style src="style.css"></style>
+</head>
+
+<body>
+  <input type="username" id="username_field" />
+  <input type="email" id="email_field" />
+  <input type="password" id="password_field" />
+  <input type="password" id="password_again_field" />
+  <input type="button" value="Register" id="submit" />
+</body>
+<script>
+
+  document.getElementById("submit").onclick = () => {
+    let username = document.getElementById("username_field").value;
+    let email = document.getElementById("email_field").value;
+    let password = document.getElementById("password_field").value;
+    let password_again = document.getElementById("password_again_field").value;
+
+    if (password != password_again) {
+      console.log("TODO: Passwords not the same");
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status == 200) {
+        document.location = "/chat";
+      } else {
+        console.log(xhr.status, xhr.responseText);
+      }
+    };
+
+    xhr.open("POST", "/register");
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(JSON.stringify({
+      "username": username,
+      "email": email,
+      "password": password
+    }));
+  };
+</script>
+
+</html>

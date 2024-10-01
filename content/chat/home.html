@@ -1,0 +1,50 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div id="create">
+    <input type="text" id="create_name">
+    <input type="button" id="create_submit" value="create">
+  </div>
+  <section id="groups"></section>
+</body>
+<script>
+  let group_section = document.getElementById("groups");
+
+  document.getElementById("create_submit").onclick = () => {
+    let name = document.getElementById("create_name").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/chat/create");
+    xhr.onload = () => {
+      let group = JSON.parse(xhr.responseText);
+      document.location = "/chat/" + group.id;
+    };
+
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(JSON.stringify({name: name}));
+  };
+
+  function display_group(group) {
+    let container = document.createElement("a");
+    let name = document.createElement("b");
+
+    name.innerText = group.name;
+    container.href = "/chat/" + group.id;
+    container.append(name);
+
+    group_section.append(container);
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/chat/groups/20/0");
+  xhr.onload = () => {
+    let groups = JSON.parse(xhr.responseText);
+    groups.forEach((g) => display_group(g));
+  };
+  xhr.send();
+</script>
+
+</html>

@@ -1,0 +1,42 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  background-color: rgb(0, 0, 5);
+}
+
+#groups {
+  display: flex;
+  flex-direction: column;
+}
+
+#sections {
+  display: flex;
+  flex-direction: row;
+}
+
+.message p {
+  margin: 0;
+}
+
+.message b {
+  margin: 0;
+}
+
+#messages {
+  overflow-y: scroll;
+  overflow-x: wrap;
+  width: 100%;
+  height: calc(100vh - 50px);
+  background-color: rgb(0, 0, 10);
+  color: white;
+  padding: 5px;
+
+  border: 2px white solid;
+  border-left: none;
+  border-top: none;
+}
+
+#members {
+  padding: 5px;
+  color: white;
+}

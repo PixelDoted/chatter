@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div id="sections">
+    <section id="messages"></section>
+    <section id="members">
+      <div id="invite">
+        <input type="text" id="invite_user">
+        <input type="button" id="invite_submit">
+      </div>
+      <div>You, yes You... are a member!</div>
+    </section>
+  </div>
+  <div id="messagebox">
+    <input type="text" id="messagebox-text" />
+    <input type="button" id="messagebox-submit" value="send" />
+  </div>
+</body>
+<script>
+  document.getElementById("invite_submit").onclick = () => {
+    let userid = document.getElementById("invite_user").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/chat/" + group + "/member");
+    xhr.onload = () => {
+      console.log(xhr.responseText);
+    };
+
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(JSON.stringify({id: userid, is_remove: false}));
+  };
+</script>
+<script>
+  let group = document.location.pathname.slice(6); // Get the group id
+
+  let message_section = document.getElementById("messages");
+  let message_offset = 0;
+  const message_count = 20;
+
+  function display_message(message, prepend) {
+    let container = document.createElement("div");
+    let display_name = document.createElement("b");
+    let display_message = document.createElement("p");
+
+    display_name.innerText = message.author;
+    display_message.innerText = message.text;
+    container.appendChild(display_name);
+    container.appendChild(display_message);
+
+    container.id = "message:" + message.id;
+    container.className = "message";
+
+    if (prepend) {
+      message_section.prepend(container);
+    } else {
+      message_section.append(container);
+    }
+  }
+
+  function load_messages() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/chat/" + group + "/messages/" + message_count + "/" + message_offset);
+    xhr.onload = () => {
+      if (xhr.status != 200) {
+        console.log(xhr.status);
+        return;
+      }
+
+      let is_top = message_section.scrollTop == message_section.scrollTopMax;
+
+      let messages = JSON.parse(xhr.responseText);
+      messages.forEach((m) => display_message(m, true));
+
+      if (is_top) {
+        message_section.scrollTop = message_section.scrollTopMax;
+      }
+    };
+
+    xhr.send();
+  }
+  load_messages();
+
+  document.getElementById("messagebox-submit").onclick = () => {
+    let message = document.getElementById("messagebox-text").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/chat/" + group + "/send");
+    xhr.onload = () => {
+      if (xhr.status != 200) {
+        console.log(xhr.status);
+        return;
+      }
+
+      let message = JSON.parse(xhr.responseText);
+      display_message(message, false);
+      message_section.scrollTop = message_section.scrollTopMax;
+    };
+
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(JSON.stringify({text: message}));
+  }
+
+
+</script>
+
+</html>

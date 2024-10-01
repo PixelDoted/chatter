@@ -1,0 +1,22 @@
+[workspace]
+resolver = "2"
+members = ["web", "db", "crypto"]
+
+[workspace.package]
+authors = ["PixelDoted"]
+edition = "2021"
+
+[workspace.dependencies]
+rocket = { version = "0.5", features = ["json"] }
+surrealdb = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.40", features = ["rt", "macros"] }
+log = "0.4"
+argon2 = "0.5"
+zeroize = { version = "1.8", features = ["derive"] }
+rand = "0.8"
+base64 = "0.22"
+chrono = "0.4"
+
+db = { path = "db", package = "chatter_db" }
+crypto = { path = "crypto", package = "chatter_crypto" }

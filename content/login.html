@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <style src="style.css"></style>
+</head>
+
+<body>
+  <input type="email" id="email_field" />
+  <input type="password" id="password_field" />
+  <input type="button" value="Login" id="submit" />
+</body>
+<script>
+
+  document.getElementById("submit").onclick = () => {
+    let email = document.getElementById("email_field").value;
+    let password = document.getElementById("password_field").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status == 200) {
+        document.location = "/chat";
+      } else {
+        console.log(xhr.status, xhr.responseText);
+      }
+    };
+
+    xhr.open("POST", "/login");
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(JSON.stringify({
+      "email": email,
+      "password": password
+    }));
+  };
+</script>
+
+</html>
